@@ -144,9 +144,77 @@ func Test_Gocart(t *testing.T) {
 
 	tree, err := BuildTree(trainingData)
 	require.Nil(t, err)
-	fmt.Printf("%s", tree.String(""))
+	_ = tree
 
-	t.Fail() // so we can see the output
+	// fmt.Printf("%s", tree.String(""))
+	// t.Fail() // so we can see the output
+
+}
+
+func Test_Ingredients(t *testing.T) {
+	trainingData := []TrainingItem{
+		TrainingItem{
+			Props: map[string]interface{}{
+				"sugar":     200,
+				"eggs":      4,
+				"flour":     300,
+				"butter":    100,
+				"salt":      15,
+				"chocolate": 0,
+			},
+			Label: "Cake",
+		},
+		TrainingItem{
+			Props: map[string]interface{}{
+				"sugar":     50,
+				"eggs":      4,
+				"flour":     200,
+				"butter":    0,
+				"salt":      5,
+				"chocolate": 200,
+			},
+			Label: "Cake",
+		},
+		TrainingItem{
+			Props: map[string]interface{}{
+				"sugar":     0,
+				"eggs":      4,
+				"flour":     0,
+				"butter":    50,
+				"salt":      15,
+				"chocolate": 0,
+			},
+			Label: "Omlette",
+		},
+		TrainingItem{
+			Props: map[string]interface{}{
+				"sugar":     10,
+				"eggs":      0,
+				"flour":     500,
+				"butter":    50,
+				"salt":      15,
+				"chocolate": 0,
+			},
+			Label: "Bread Dough",
+		},
+		TrainingItem{
+			Props: map[string]interface{}{
+				"sugar":     0,
+				"eggs":      2,
+				"flour":     300,
+				"butter":    20,
+				"salt":      40,
+				"chocolate": 0,
+			},
+			Label: "Bread Dough",
+		},
+	}
+
+	tree, err := BuildTree(trainingData)
+	require.Nil(t, err)
+	fmt.Printf("%s\n\n", tree.String(""))
+
+	t.Fail()
 
 }
 
