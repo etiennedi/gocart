@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -107,11 +108,45 @@ func Test_Gocart(t *testing.T) {
 				trainingData[2], trainingData[3],
 			}
 			assert.ElementsMatch(t, res.False, expectedFalse)
+		})
 
+		t.Run("calculating impurity", func(t *testing.T) {
+			q := newQuestion("diameter", 3)
+			res, err := partition(trainingData, q)
+			require.Nil(t, err)
+
+			assert.Equal(t, 0.0, giniImpurity(res.False))
+			assert.NotEqual(t, 0.0, giniImpurity(res.True))
+		})
+
+		t.Run("calculating information gain", func(t *testing.T) {
+			startingImpurity := giniImpurity(trainingData)
+			fmt.Println(startingImpurity)
+
+			partsGreen, err := partition(trainingData, newQuestion("color", "green"))
+			require.Nil(t, err)
+			gainColorGreen := informationGain(partsGreen, startingImpurity)
+
+			partsRed, err := partition(trainingData, newQuestion("color", "red"))
+			require.Nil(t, err)
+			gainColorRed := informationGain(partsRed, startingImpurity)
+
+			assert.True(t, gainColorRed > gainColorGreen, "we know that we gain more info from asking is the color red, than asking is the color green")
+		})
+
+		t.Run("finding the best question", func(t *testing.T) {
+			question, _, err := findBestQuestion(trainingData)
+			require.Nil(t, err)
+
+			assert.Equal(t, "Is diameter >= 3?", question.String())
 		})
 	})
 
-	BuildTree(trainingData)
+	tree, err := BuildTree(trainingData)
+	require.Nil(t, err)
+	fmt.Printf("%s", tree.String(""))
+
+	t.Fail() // so we can see the output
 
 }
 
